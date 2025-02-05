@@ -14,4 +14,7 @@ document.addEventListener('DOMContentLoaded', function () {
             ui.changeMode(selectedMode);
         });
     });
+    document.getElementById('restart').addEventListener('click', () => {
+        ui.resetGame();
+    });
 });

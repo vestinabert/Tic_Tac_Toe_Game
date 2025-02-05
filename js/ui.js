@@ -65,5 +65,6 @@ export class UI {
         this.game = new TicTacToe();
         this.createBoard();
         this.updateUI();
+        this.updateStatus();
     }
 }
