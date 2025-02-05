@@ -1,9 +1,10 @@
 document.addEventListener('DOMContentLoaded', function() {
-    createBoard();
+    const board = document.getElementById('board');
+    createBoard(board);
+    board.addEventListener("click", handleCellClick);
 });
 
-function createBoard() {
-    const board = document.getElementById('board');
+function createBoard(board) {
     for (let i = 0; i < 16; i++) {
         const cell = document.createElement('div');
         cell.classList.add('cell');
@@ -11,3 +12,7 @@ function createBoard() {
         board.appendChild(cell);
     }
 };
+function handleCellClick(event) {
+    const cell = event.target;
+    console.log(cell);
+}
