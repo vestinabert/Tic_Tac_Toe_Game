@@ -35,7 +35,6 @@ export class UI {
         const winner = this.game.checkWin();
         if (winner) {
             alert(`${winner} Wins!`);
-            this.resetGame();
             return;
         }
 
