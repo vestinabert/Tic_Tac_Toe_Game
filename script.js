@@ -1,4 +1,5 @@
-document.addEventListener('DOMContentLoaded', function() {
+let player = 'X';
+document.addEventListener('DOMContentLoaded', function () {
     const board = document.getElementById('board');
     createBoard(board);
     board.addEventListener("click", handleCellClick);
@@ -14,5 +15,8 @@ function createBoard(board) {
 };
 function handleCellClick(event) {
     const cell = event.target;
-    console.log(cell);
+    console.log(cell.dataset.index);
+    if (cell.textContent !== '') return;
+    cell.textContent = player;
+    player = (player === 'X') ? 'O' : 'X';
 }
