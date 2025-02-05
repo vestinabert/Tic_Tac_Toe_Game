@@ -7,4 +7,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
     ui.createBoard();
     ui.board.addEventListener('click', (event) => ui.handleCellClick(event));
+
+    document.querySelectorAll('input[name="mode"]').forEach((radio) => {
+        radio.addEventListener('change', (event) => {
+            const selectedMode = event.target.value;
+            ui.changeMode(selectedMode);
+        });
+    });
 });

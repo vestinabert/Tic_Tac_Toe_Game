@@ -2,13 +2,19 @@ export class TicTacToe {
     constructor(size = 4) {
         this.size = size;
         this.boardState = Array(size * size).fill(null);
+        this.statusElement = document.getElementById('status');
         this.currentPlayer = 'X';
+        this.currentMode = 'human';
     }
 
     makeMove(index) {
         if (this.boardState[index] !== null) return false;
         this.boardState[index] = this.currentPlayer;
         return true;
+    }
+
+    setMode(mode) {
+        this.currentMode = mode;
     }
 
     checkWin() {
@@ -46,6 +52,12 @@ export class TicTacToe {
             boardState[3] === boardState[9] &&
             boardState[3] === boardState[12]) {
             return boardState[3];
+        }
+
+        // Check for a draw.
+        if (boardState.every(cell => cell !== null)) {
+            gameOver = true;
+            return 'draw';
         }
 
         return null;

@@ -23,6 +23,18 @@ export class UI {
         });
     }
 
+    updateStatus() {
+        if (this.game.currentMode === "random") {
+            if (this.game.currentPlayer === "X") {
+                this.game.statusElement.textContent = "Your turn (X)";
+            } else {
+                this.game.statusElement.textContent = "Random's turn (O)";
+            }
+        } else {
+            this.game.statusElement.textContent = "Player " + this.game.currentPlayer + "'s turn";
+        }
+    }
+
     handleCellClick(event) {
         const cell = event.target;
         if (!cell.classList.contains('cell')) return;
@@ -39,6 +51,14 @@ export class UI {
         }
 
         this.game.switchPlayer();
+        this.updateStatus();
+
+    }
+
+    changeMode(mode) {
+        this.game.setMode(mode);
+        this.resetGame();
+        console.log("Mode changed to: " + mode);
     }
 
     resetGame() {

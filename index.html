@@ -10,8 +10,8 @@
 </head>
 
 <body class="container text-center mt-4">
-    <h1>Tic Tac Toe</h1>
-    <div id="controls" class="d-flex justify-content-center align-items-center gap-3 mb-3">
+    <h1 class="my-3">Tic Tac Toe</h1>
+    <div id="controls" class="d-flex justify-content-center align-items-center gap-3 my-3">
         <div class="btn-group" role="group" aria-label="Game Mode">
             <input type="radio" class="btn-check" name="mode" id="humanMode" value="human" checked>
             <label class="btn btn-outline-primary" for="humanMode">Human</label>
@@ -22,7 +22,8 @@
 
         <button id="restart" class="btn btn-primary">Restart</button>
     </div>
-    <div id="board" class="d-grid gap-2 mx-auto"></div>
+    <div id="status" class="my-3">Player X's turn</div>
+    <div id="board"></div>
 
     <script type="module" src="js/main.js"></script>
 </body>
