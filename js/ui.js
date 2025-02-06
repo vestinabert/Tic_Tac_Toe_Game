@@ -1,9 +1,41 @@
 import { TicTacToe } from './game.js';
 
 export class UI {
-    constructor(game) {
-        this.game = game;
-        this.board = document.getElementById('board');
+    constructor() {
+        this.game = new TicTacToe();
+        this.board = document.getElementById("board");
+        this.player1IconSelect = document.getElementById("player1Icon");
+        this.player2IconSelect = document.getElementById("player2Icon");
+    }
+
+    init() {
+        this.createBoard();
+        this.addEventListeners();
+        this.updateStatus();
+    }
+
+    updatePlayerIcons() {
+        const player1Icon = this.player1IconSelect.value;
+        const player2Icon = this.player2IconSelect.value;
+        this.game.setPlayerIcons(player1Icon, player2Icon);
+        this.restartGame();
+    }
+
+    addEventListeners() {
+        this.board.addEventListener("click", (event) => this.handleCellClick(event));
+
+        document.querySelectorAll('input[name="mode"]').forEach((radio) => {
+            radio.addEventListener("change", (event) => {
+                this.game.changeMode(event.target.value);
+                this.restartGame();
+            });
+        });
+
+        document.getElementById("restart").addEventListener("click", () => {
+            this.restartGame();
+        });
+        this.player1IconSelect.addEventListener("change", () => this.updatePlayerIcons());
+        this.player2IconSelect.addEventListener("change", () => this.updatePlayerIcons());
     }
 
     createBoard() {
@@ -23,10 +55,20 @@ export class UI {
         if (this.game.gameOver) return;
 
         if (this.game.currentMode === "random") {
-            this.game.status.textContent = this.game.currentPlayer === "X" ? "Your turn (X)" : "Random's turn (O)";
+            this.game.status.textContent = this.game.currentPlayer === "player1"
+                ? `${this.game.playerIcons[this.game.currentPlayer]} turn`
+                : `Random ${this.game.playerIcons[this.game.currentPlayer]} turn`;
         } else {
-            this.game.status.textContent = `Player ${this.game.currentPlayer}'s turn`;
+            this.game.status.textContent = `Player ${this.game.playerIcons[this.game.currentPlayer]}'s turn`;
         }
+    }
+
+
+    highlightWinningCells(win) {
+        win.forEach(i => {
+            const winningCell = board.querySelector('[data-index="' + i + '"]');
+            if (winningCell) winningCell.classList.add("winning-cell");
+        });
     }
 
     handleCellClick(event) {
@@ -37,23 +79,25 @@ export class UI {
         if (this.game.gameOver || this.game.boardState[index]) return;
 
         this.game.boardState[index] = this.game.currentPlayer;
-        cell.textContent = this.game.currentPlayer;
+        cell.textContent = this.game.playerIcons[this.game.currentPlayer];
 
         const win = this.game.checkWin();
         if (win) {
             this.game.gameOver = true;
-            if (this.game.currentMode === "random" && this.game.currentPlayer === "O") {
-                this.game.status.textContent = "Random wins!";
+            this.highlightWinningCells(win);
+            if (this.game.currentMode === "random" && this.game.currentPlayer === "player2") {
+                this.game.status.textContent = `Random ${this.game.playerIcons[this.game.currentPlayer]} wins`;
             } else {
-                this.game.status.textContent = "Player " + this.game.currentPlayer + " wins!";
+                this.game.status.textContent = `${this.game.playerIcons[this.game.currentPlayer]} wins`;
             }
             return;
         }
+        this.game.checkDraw();
 
         this.game.switchPlayer();
         this.updateStatus();
 
-        if (this.game.currentMode === "random" && this.game.currentPlayer === "O" && !this.game.gameOver) {
+        if (this.game.currentMode === "random" && this.game.currentPlayer === "player2" && !this.game.gameOver) {
             setTimeout(this.getRandomMove.bind(this), 500);
         }
     }
@@ -73,7 +117,7 @@ export class UI {
 
     restartGame() {
         this.game.boardState = new Array(16).fill(null);
-        this.game.currentPlayer = "X";
+        this.game.currentPlayer = "player1";
         this.game.gameOver = false;
         const cells = this.board.querySelectorAll(".cell");
         cells.forEach(cell => {
