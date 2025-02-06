@@ -53,12 +53,19 @@ export class UI {
         this.game.switchPlayer();
         this.updateStatus();
 
+        if (this.game.currentMode === "random" && this.game.currentPlayer === "O") {
+            this.game.getRandomMove();
+            this.updateUI();
+            this.game.switchPlayer();
+            this.updateStatus();
+        }
+
     }
 
     changeMode(mode) {
-        this.game.setMode(mode);
         this.resetGame();
-        console.log("Mode changed to: " + mode);
+        this.game.setMode(mode);
+        console.log("Mode changed to: " + this.game.currentMode);
     }
 
     resetGame() {

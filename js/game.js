@@ -5,6 +5,7 @@ export class TicTacToe {
         this.statusElement = document.getElementById('status');
         this.currentPlayer = 'X';
         this.currentMode = 'human';
+        this.gameOver = false;
     }
 
     makeMove(index) {
@@ -15,6 +16,15 @@ export class TicTacToe {
 
     setMode(mode) {
         this.currentMode = mode;
+    }
+    getRandomMove() {
+        if (this.gameOver) return;
+        const emptyCells = this.boardState
+            .map((cell, index) => cell === null ? index : null)
+            .filter(index => index !== null);
+        if (emptyCells.length === 0) return;
+        const randomIndex = emptyCells[Math.floor(Math.random() * emptyCells.length)];
+        this.makeMove(randomIndex);
     }
 
     checkWin() {
