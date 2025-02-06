@@ -49,6 +49,12 @@ export class UI {
             this.game.status.textContent = `Player ${this.game.currentPlayer}'s turn`;
         }
     }
+    highlightWinningCells(win) {
+        win.forEach(i => {
+            const winningCell = board.querySelector('[data-index="' + i + '"]');
+            if (winningCell) winningCell.classList.add("winning-cell");
+        });
+    }
 
     handleCellClick(event) {
         const cell = event.target;
@@ -63,6 +69,7 @@ export class UI {
         const win = this.game.checkWin();
         if (win) {
             this.game.gameOver = true;
+            this.highlightWinningCells(win);
             if (this.game.currentMode === "random" && this.game.currentPlayer === "O") {
                 this.game.status.textContent = "Random wins!";
             } else {
