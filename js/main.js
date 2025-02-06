@@ -10,11 +10,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
     document.querySelectorAll('input[name="mode"]').forEach((radio) => {
         radio.addEventListener('change', (event) => {
-            const selectedMode = event.target.value;
-            ui.changeMode(selectedMode);
+            game.changeMode(event.target.value);
+            ui.restartGame();
         });
     });
     document.getElementById('restart').addEventListener('click', () => {
-        ui.resetGame();
+        ui.restartGame();
     });
 });
