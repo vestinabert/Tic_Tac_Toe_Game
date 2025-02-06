@@ -3,9 +3,17 @@ export class TicTacToe {
         this.size = size;
         this.boardState = new Array(size * size).fill(null);
         this.status = document.getElementById('status');
-        this.currentPlayer = 'X';
+        this.currentPlayer = 'player1';
         this.currentMode = 'human';
         this.gameOver = false;
+        this.playerIcons = {
+            player1: "🎀",
+            player2: "💀",
+        };
+    }
+    setPlayerIcons(player1Icon, player2Icon) {
+        this.playerIcons.player1 = player1Icon;
+        this.playerIcons.player2 = player2Icon;
     }
 
     checkWin() {
@@ -57,7 +65,7 @@ export class TicTacToe {
     }
 
     switchPlayer() {
-        this.currentPlayer = this.currentPlayer === 'X' ? 'O' : 'X';
+        this.currentPlayer = this.currentPlayer === 'player1' ? 'player2' : 'player1';
     }
 
     changeMode(mode) {
