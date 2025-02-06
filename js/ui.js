@@ -7,7 +7,10 @@ export class UI {
     }
 
     createBoard() {
-        this.board.innerHTML = '';
+        while (this.board.firstChild) {
+            this.board.removeChild(this.board.firstChild);
+        }
+
         for (let i = 0; i < this.game.size * this.game.size; i++) {
             const cell = document.createElement('div');
             cell.classList.add('cell');
@@ -16,22 +19,13 @@ export class UI {
         }
     }
 
-    updateUI() {
-        const cells = this.board.querySelectorAll('.cell');
-        cells.forEach((cell, index) => {
-            cell.textContent = this.game.boardState[index] || '';
-        });
-    }
-
     updateStatus() {
+        if (this.game.gameOver) return;
+
         if (this.game.currentMode === "random") {
-            if (this.game.currentPlayer === "X") {
-                this.game.statusElement.textContent = "Your turn (X)";
-            } else {
-                this.game.statusElement.textContent = "Random's turn (O)";
-            }
+            this.game.status.textContent = this.game.currentPlayer === "X" ? "Your turn (X)" : "Random's turn (O)";
         } else {
-            this.game.statusElement.textContent = "Player " + this.game.currentPlayer + "'s turn";
+            this.game.status.textContent = `Player ${this.game.currentPlayer}'s turn`;
         }
     }
 
@@ -40,31 +34,53 @@ export class UI {
         if (!cell.classList.contains('cell')) return;
 
         const index = parseInt(cell.dataset.index);
-        if (!this.game.makeMove(index)) return;
+        if (this.game.gameOver || this.game.boardState[index]) return;
 
-        this.updateUI();
+        this.game.boardState[index] = this.game.currentPlayer;
+        cell.textContent = this.game.currentPlayer;
 
-        const winner = this.game.checkWin();
-        if (winner) {
-            alert(`${winner} Wins!`);
+        const win = this.game.checkWin();
+        if (win) {
+            this.game.gameOver = true;
+            if (this.game.currentMode === "random" && this.game.currentPlayer === "O") {
+                this.game.status.textContent = "Random wins!";
+            } else {
+                this.game.status.textContent = "Player " + this.game.currentPlayer + " wins!";
+            }
             return;
         }
 
         this.game.switchPlayer();
         this.updateStatus();
 
+        if (this.game.currentMode === "random" && this.game.currentPlayer === "O" && !this.game.gameOver) {
+            setTimeout(this.getRandomMove.bind(this), 500);
+        }
     }
 
-    changeMode(mode) {
-        this.game.setMode(mode);
-        this.resetGame();
-        console.log("Mode changed to: " + mode);
+    getRandomMove() {
+        if (this.game.gameOver) return;
+        const emptyCells = this.game.boardState
+            .map((cell, index) => cell === null ? index : null)
+            .filter(index => index !== null);
+        if (emptyCells.length === 0) return;
+        const randomIndex = emptyCells[Math.floor(Math.random() * emptyCells.length)];
+        const cell = this.board.querySelector('[data-index="' + randomIndex + '"]');
+        if (cell) {
+            cell.click();
+        }
     }
 
-    resetGame() {
-        this.game = new TicTacToe();
-        this.createBoard();
-        this.updateUI();
+    restartGame() {
+        this.game.boardState = new Array(16).fill(null);
+        this.game.currentPlayer = "X";
+        this.game.gameOver = false;
+        const cells = this.board.querySelectorAll(".cell");
+        cells.forEach(cell => {
+            cell.textContent = "";
+            cell.classList.remove("winning-cell");
+        });
         this.updateStatus();
     }
+
 }
