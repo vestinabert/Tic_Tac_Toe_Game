@@ -8,7 +8,6 @@ export class TicTacToe {
         this.gameOver = false;
     }
 
-
     checkWin() {
         const { size, boardState } = this;
 
@@ -48,6 +47,7 @@ export class TicTacToe {
 
         return null;
     }
+
     checkDraw() {
         if (this.boardState.every(cell => cell !== null)) {
             this.gameOver = true;

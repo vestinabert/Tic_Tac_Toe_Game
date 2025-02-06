@@ -1,9 +1,30 @@
 import { TicTacToe } from './game.js';
 
 export class UI {
-    constructor(game) {
-        this.game = game;
-        this.board = document.getElementById('board');
+    constructor() {
+        this.game = new TicTacToe();
+        this.board = document.getElementById("board");
+    }
+
+    init() {
+        this.createBoard();
+        this.addEventListeners();
+        this.updateStatus();
+    }
+
+    addEventListeners() {
+        this.board.addEventListener("click", (event) => this.handleCellClick(event));
+
+        document.querySelectorAll('input[name="mode"]').forEach((radio) => {
+            radio.addEventListener("change", (event) => {
+                this.game.changeMode(event.target.value);
+                this.restartGame();
+            });
+        });
+
+        document.getElementById("restart").addEventListener("click", () => {
+            this.restartGame();
+        });
     }
 
     createBoard() {
@@ -49,6 +70,7 @@ export class UI {
             }
             return;
         }
+        this.game.checkDraw();
 
         this.game.switchPlayer();
         this.updateStatus();
